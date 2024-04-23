@@ -1,6 +1,7 @@
 import axios from 'axios'
 import {useState} from "react";
 import useAuth from '../hooks/useAuth'
+import { useNavigate } from 'react-router-dom';
 
 export default function LoginForm() {
   const { setUser } = useAuth()
@@ -8,12 +9,13 @@ export default function LoginForm() {
     username : '', 
     password : ''
   })
-
+  const navigate = useNavigate();
   const hdlChange = e => {
     setInput( prv => ( { ...prv, [e.target.name] : e.target.value } ) )
   }
 
   const hdlSubmit = async e => {
+
     try {
       e.preventDefault()
       // validation
@@ -25,6 +27,8 @@ export default function LoginForm() {
       })
       console.log(rs1.data)
       setUser(rs1.data)
+      navigate('/');
+      
       
     }catch(err) {
       console.log( err.message)

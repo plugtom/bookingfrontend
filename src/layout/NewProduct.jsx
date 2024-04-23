@@ -1,7 +1,7 @@
 import axios from "axios";
 import {useState} from "react";
 
-export default function NewTodoForm() {
+export default function NewProduct() {
   const [input, setInput] = useState({
     title : '',
     dueDate : new Date()
@@ -17,7 +17,7 @@ export default function NewTodoForm() {
       // setInput(prv => ({...prv, dueDate: new Date(prv.dueDate) }))
       const output = { ...input, dueDate: new Date(input.dueDate) }
       const token = localStorage.getItem('token')
-      const rs = await axios.post('http://localhost:8889/todos', output, {
+      const rs = await axios.post('http://localhost:8234/admin/product', output, {
         headers : { Authorization : `Bearer ${token}`}
       })
       alert('Create new OK')

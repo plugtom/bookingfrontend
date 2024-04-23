@@ -1,45 +1,61 @@
-import {Link, useNavigate} from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
 
 const guestNav = [
-  { to : '/', text: 'Login' },
-  { to : '/register', text: 'Register' },
-]
+  { to: '/', text: 'Home' },
+  { to: '/login', text: 'Login' },
+  { to: '/register', text: 'Register' },
+];
 
-const userNav = [
-  { to : '/', text: 'Home' },
-  { to : '/new', text: 'New Todo' },
-]
+const userNav = [{ to: '/', text: 'Home' }];
+
+const adminNav = [
+  { to: '/', text: 'หน้าแรก' },
+  { to: '/product', text: 'Product' },
+  { to: '/category', text: 'category' },
+  { to: '/user', text: 'user' },
+];
 
 export default function Header() {
-  const {user, logout} = useAuth()
-  const finalNav = user?.id ? userNav : guestNav
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
-  const navigate = useNavigate()
+  const finalNav = () => {
+    switch (true) {
+      case !user?.id:
+        return guestNav;
+      case user.role === 'ADMIN':
+        return adminNav;
+      default:
+        return userNav;
+    }
+  };
 
-  const hdlLogout = () => {
-    logout()
-    navigate('/')
-  }
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
 
   return (
-    <div className="navbar bg-base-100">
-      <div className="flex-1">
-        <a className="btn btn-ghost text-xl">Hello, {user?.id ? user.username : 'Guest'}</a>
-      </div>
+    <div className="navbar bg-yellow-200">
       <div className="flex-none">
-        <ul className="menu menu-horizontal px-1">
-          { finalNav.map( el => (
-            <li key={el.to} >
+        <nav className="menu menu-horizontal px-1">
+          {finalNav().map((el) => (
+            <li key={el.to}>
               <Link to={el.to}>{el.text}</Link>
             </li>
           ))}
-          { user?.id && (
+          {user?.id && (
             <li>
-              <Link to='#' onClick={hdlLogout}>Logout</Link>
+              <button onClick={handleLogout}>Logout</button>
             </li>
-          ) }
-        </ul>
+          )}
+        </nav>
+        <h1 className='t'>ร้านหนังสือออนไลน์</h1>
+      </div>
+      <div className='flex-none ml-auto'>
+        <input type="search" id="search" />
+        <button>Search</button>
       </div>
     </div>
   );
